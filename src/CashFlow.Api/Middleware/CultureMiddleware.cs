@@ -1,27 +1,33 @@
 ﻿using System.Globalization;
 
-namespace CashFlow.Api.Middleware;
+namespace CashFlow.API.Middleware;
 
 public class CultureMiddleware
 {
     private readonly RequestDelegate _next;
+
     public CultureMiddleware(RequestDelegate next)
     {
         _next = next;
     }
+
     public async Task Invoke(HttpContext context)
     {
-        var culture = context.Request.Headers.AcceptLanguage.FirstOrDefault();
-        // Define a cultura padrão como "en"
+        var supportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList();
+
+        var requestedCulture = context.Request.Headers.AcceptLanguage.FirstOrDefault();
+
         var cultureInfo = new CultureInfo("en");
-        // Executado quando o header Accept-Language estiver presente e não for vazio ou nulo
-        if (!string.IsNullOrWhiteSpace(culture))
+
+        if (!string.IsNullOrWhiteSpace(requestedCulture)
+            && supportedLanguages.Exists(language => language.Name.Equals(requestedCulture)))
         {
-            // Tenta definir a cultura com base no header
-            cultureInfo = new CultureInfo(culture);
+            cultureInfo = new CultureInfo(requestedCulture);
         }
+
         CultureInfo.CurrentCulture = cultureInfo;
         CultureInfo.CurrentUICulture = cultureInfo;
+
         await _next(context);
     }
 }
