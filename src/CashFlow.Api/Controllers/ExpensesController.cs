@@ -17,4 +17,3 @@ public class ExpensesController : ControllerBase
     }
 }
 
-9
