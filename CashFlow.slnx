@@ -5,7 +5,7 @@
     <Project Path="src/CashFlow.Communication/CashFlow.Communication.csproj" />
     <Project Path="src/CashFlow.Domain/CashFlow.Domain.csproj" />
     <Project Path="src/CashFlow.Exception/CashFlow.Exception.csproj" />
-    <Project Path="src/CashFlow.Infraestructure/CashFlow.Infraestructure.csproj" />
+    <Project Path="src/CashFlow.Infraestructure/CashFlow.Infrastructure.csproj" />
   </Folder>
 
   <Folder Name="/tests/">

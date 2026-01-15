@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.12.1" />
   </ItemGroup>
 
@@ -15,7 +16,7 @@
     <ProjectReference Include="..\CashFlow.Application\CashFlow.Application.csproj" />
     <ProjectReference Include="..\CashFlow.Communication\CashFlow.Communication.csproj" />
     <ProjectReference Include="..\CashFlow.Exception\CashFlow.Exception.csproj" />
-    <ProjectReference Include="..\CashFlow.Infraestructure\CashFlow.Infraestructure.csproj" />
+    <ProjectReference Include="..\CashFlow.Infraestructure\CashFlow.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
