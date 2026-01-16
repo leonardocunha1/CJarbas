@@ -18,7 +18,7 @@ public class RegisterExpensesValidatorTests
         var result = validator.Validate(request);
         // Assert
         result.IsValid.Should().BeTrue();
-    }0
+    }
 
     [Theory]
     [InlineData(null)]
