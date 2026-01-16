@@ -1,5 +1,6 @@
 using CashFlow.Api.Filters;
 using CashFlow.API.Middleware;
+using CashFlow.Infrastructure;
 using Scalar.AspNetCore; // <--- Adicione este using
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,10 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // Gera o JSON
 
 builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
+
+builder.Services.AddInfrastructure(); // Adiciona as injeções de dependência da infraestrutura
+
+
 
 var app = builder.Build();
 
