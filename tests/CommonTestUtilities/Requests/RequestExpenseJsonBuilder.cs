@@ -4,14 +4,14 @@ using CashFlow.Communication.Requests;
 
 namespace CommonTestUtilities.Requests;
 
-public class RequestRegisterExpenseJsonBuilder
+public class RequestExpenseJsonBuilder
 {
-    public static RequestRegisterExpenseJson Build()
+    public static RequestExpenseJson Build()
     {
         /*
          * Maneira mais verbosa de fazer a mesma coisa que o código abaixo:
          * var faker = new Faker();
-        var request = new RequestRegisterExpenseJson
+        var request = new RequestExpenseJson
         {
             Title = faker.Commerce.ProductName(),
             Description = faker.Commerce.ProductDescription(),
@@ -21,7 +21,7 @@ public class RequestRegisterExpenseJsonBuilder
         };
         */
 
-        return new Faker<RequestRegisterExpenseJson>()
+        return new Faker<RequestExpenseJson>()
             .RuleFor(r => r.Title, faker => faker.Commerce.ProductName())
             .RuleFor(r => r.Description, faker => faker.Commerce.ProductDescription())
             .RuleFor(r => r.Amount, faker => faker.Finance.Amount())
