@@ -18,6 +18,11 @@ public class GenerateExpensesReportExcelUseCase : IGenerateExpensesReportExcelUs
         // ela vira com o nome do mes e ano, ex: "June 2024"
         var worksheet = workbook.Worksheets.Add(month.ToString("Y"));
         InsertHeader(worksheet);
+
+        var file = new MemoryStream();
+        workbook.SaveAs(file);
+
+        return file.ToArray();
     }
 
     private void InsertHeader(IXLWorksheet worksheet)
