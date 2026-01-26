@@ -37,7 +37,7 @@ Para obter uma cópia local funcionando, siga estes passos simples.
 
 1. Clone o repositório:
     ```sh
-    git clone https://github.com/welissonArley/CashFlow.git
+    git clone https://github.com/leonardocunha1/CJarbas.git
     ```
 
 2. Preencha as informações no arquivo `appsettings.Development.json`.
@@ -56,4 +56,5 @@ Para obter uma cópia local funcionando, siga estes passos simples.
 [badge-windows]: https://img.shields.io/badge/Windows-0078D4?logo=windows&logoColor=fff&style=for-the-badge
 [badge-visual-studio]: https://img.shields.io/badge/Visual%20Studio-5C2D91?logo=visualstudio&logoColor=fff&style=for-the-badge
 [badge-mysql]: https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff&style=for-the-badge
+
 [badge-swagger]: https://img.shields.io/badge/Swagger-85EA2D?logo=swagger&logoColor=000&style=for-the-badge
