@@ -13,6 +13,7 @@ namespace UseCases.Test.Login.DoLogin;
 public class DoLoginUseCaseTest
 {
     [Fact]
+
     public async Task Success()
     {
         var user = UserBuilder.Build();

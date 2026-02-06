@@ -10,7 +10,8 @@
 
   <Folder Name="/tests/">
     <Project Path="tests/CommonTestUtilities/CommonTestUtilities.csproj" />
-    <Project Path="tests/Validators.Test/Validators.Test.csproj" />
     <Project Path="tests/UseCases.Test/UseCases.Test.csproj" Id="d80582cd-f532-4f7d-9a71-714b959eb227" />
+    <Project Path="tests/Validators.Test/Validators.Test.csproj" />
+    <Project Path="tests/WebApi.Test/WebApi.Test.csproj" Id="f46d82be-8865-433d-b3ed-a800454cf4a0" />
   </Folder>
 </Solution>

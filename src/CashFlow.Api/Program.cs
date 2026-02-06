@@ -71,3 +71,5 @@ async Task MigrateDatabase()
     // Chama o método de migration do banco de dados. e como se fosse uma injeção de dependência
     await DatabaseMigration.MigrateDatabase(scope.ServiceProvider);
 }
+
+public partial class Program { } // Necessário para os testes de integração, permite que o WebApplicationFactory acesse a classe Program
