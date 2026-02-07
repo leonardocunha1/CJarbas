@@ -2,6 +2,7 @@ using CashFlow.Api.Filters;
 using CashFlow.API.Middleware;
 using CashFlow.Application;
 using CashFlow.Infrastructure;
+using CashFlow.Infrastructure.Extensions;
 using CashFlow.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -58,8 +59,13 @@ app.UseAuthorization();
 // Mapeia os controllers para as rotas
 app.MapControllers();
 
-// Executa as migrations do banco de dados ao iniciar a aplicação
-await MigrateDatabase();
+// Verifica se a aplicação está rodando em um ambiente de teste, se não estiver, executa as migrações do banco de dados 
+if (builder.Configuration.IsTestEnvironment() == false)
+{
+    // Executa as migrations do banco de dados ao iniciar a aplicação
+    await MigrateDatabase();
+}
+
 
 app.Run();
 
