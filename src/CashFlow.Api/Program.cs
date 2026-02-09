@@ -1,6 +1,8 @@
 using CashFlow.Api.Filters;
+using CashFlow.Api.Token;
 using CashFlow.API.Middleware;
 using CashFlow.Application;
+using CashFlow.Domain.Security.Tokens;
 using CashFlow.Infrastructure;
 using CashFlow.Infrastructure.Extensions;
 using CashFlow.Infrastructure.Migrations;
@@ -18,6 +20,8 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddInfrastructure(builder.Configuration); // Adiciona as injeções de dependência da infraestrutura
 builder.Services.AddApplication(); // Adiciona as injeções de dependência da aplicação
+builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>(); // Adiciona a implementação de ITokenProvider que obtém o token do contexto HTTP, necessário para obter o token nas requisições e usar em outras classes, como no LoggedUser
+builder.Services.AddHttpClient(); // Adiciona o HttpClient para ser injetado em outras classes, necessário para o HttpContextTokenValue
 
 var signingKey = builder.Configuration.GetValue<string>("Settings:Jwt:SigningKey"); // Obtém a chave de assinatura do JWT do arquivo de configuração, GetValue vem do nuget Microsoft.Extensions.Configuration.Binder
 
