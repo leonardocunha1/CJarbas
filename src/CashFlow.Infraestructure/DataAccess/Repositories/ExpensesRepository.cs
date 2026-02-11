@@ -11,38 +11,37 @@ internal class ExpensesRepository : IExpensesReadOnlyRepository, IExpensesWriteO
     {
         _dbContext = dbContext;
     }
+
     public async Task Add(Expense expense)
     {
         await _dbContext.Expenses.AddAsync(expense);
     }
 
-    public async Task<bool> Delete(long id)
+    public async Task Delete(long id)
     {
-        var result = await _dbContext.Expenses.FirstOrDefaultAsync(expense => expense.Id == id);
-        if (result is null)
-        {
-            return false;
-        }
+        var result = await _dbContext.Expenses.FindAsync(id);
 
-        _dbContext.Expenses.Remove(result);
-
-        return true;
+        _dbContext.Expenses.Remove(result!);
     }
 
-    public async Task<List<Expense>> GetAll()
+    public async Task<List<Expense>> GetAll(User user)
     {
-       return await _dbContext.Expenses.AsNoTracking().ToListAsync();
+        return await _dbContext.Expenses.AsNoTracking().Where(expense => expense.UserId == user.Id).ToListAsync();
     }
 
-    async Task<Expense?> IExpensesReadOnlyRepository.GetById(long id)
+    async Task<Expense?> IExpensesReadOnlyRepository.GetById(User user, long id)
     {
-        return await _dbContext.Expenses.AsNoTracking().FirstOrDefaultAsync(expense => expense.Id == id);
+        return await _dbContext.Expenses
+            .AsNoTracking()
+            .FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
     }
-    async Task<Expense?> IExpensesUpdateOnlyRepository.GetById(User user,long id)
+
+    async Task<Expense?> IExpensesUpdateOnlyRepository.GetById(User user, long id)
     {
-        return await _dbContext.Expenses.FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
+        return await _dbContext.Expenses
+            .FirstOrDefaultAsync(expense => expense.Id == id && expense.UserId == user.Id);
     }
-    // o método update não é assíncrono porque o EF Core rastreia as mudanças automaticamente, ou seja, não há necessidade de colocar async/await em nenhuma operação aqui.
+
     public void Update(Expense expense)
     {
         _dbContext.Expenses.Update(expense);
@@ -51,15 +50,16 @@ internal class ExpensesRepository : IExpensesReadOnlyRepository, IExpensesWriteO
     public async Task<List<Expense>> FilterByMonth(DateOnly date)
     {
         var startDate = new DateTime(year: date.Year, month: date.Month, day: 1).Date;
-        var daysInMonth = DateTime.DaysInMonth(year: date.Year, month: date.Month);
-        var EndDate = new DateTime(year: date.Year, month: date.Month, day: daysInMonth, hour: 23, minute:59, second: 59);
 
-       return await _dbContext
+        var daysInMonth = DateTime.DaysInMonth(year: date.Year, month: date.Month);
+        var endDate = new DateTime(year: date.Year, month: date.Month, day: daysInMonth, hour: 23, minute: 59, second: 59);
+
+        return await _dbContext
             .Expenses
             .AsNoTracking()
-            .Where(expense => expense.Date >= startDate && expense.Date <= EndDate)
+            .Where(expense => expense.Date >= startDate && expense.Date <= endDate)
             .OrderBy(expense => expense.Date)
-            .ThenBy(expense => expense.Date)
+            .ThenBy(expense => expense.Title)
             .ToListAsync();
     }
 }
