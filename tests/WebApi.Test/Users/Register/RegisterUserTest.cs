@@ -14,8 +14,6 @@ public class RegisterUserTest : CashFlowClassFixture
 {
     private const string METHOD = "api/User";
 
-    private readonly HttpClient _httpClient;
-
     public RegisterUserTest(CustomWebApplicationFactory webApplicationFactory) : base(webApplicationFactory)
     {
     }
