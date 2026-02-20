@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using WebApi.Test.Resources;
 
 namespace WebApi.Test;
 
@@ -20,10 +21,9 @@ namespace WebApi.Test;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     // Variáveis para armazenar dados que serão usados durante os testes
-    private Expense _expense;
-    private User _user;
-    private string _password;
-    private string _token;
+    public ExpenseIdentityManager Expense { get; private set; } = default!;
+    public UserIdentityManager User_Team_Member { get; private set; } = default!;
+    public UserIdentityManager User_Admin { get; private set; } = default!;
 
     // Método que configura o servidor web antes de iniciar os testes
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -49,49 +49,53 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 var dbContext = scope.ServiceProvider.GetRequiredService<CashFlowDbContext>();
                 // Obtém o serviço de criptografia de senha
                 var passwordEncripter = scope.ServiceProvider.GetRequiredService<IPasswordEncripter>();
+                // Obtém o serviço de geração de tokens (pode ser necessário para criar um token válido para os testes)
+                var accessTokenGenerator = scope.ServiceProvider.GetRequiredService<IAccessTokenGenerator>();
 
-                // Chama o método para popular o banco com dados iniciais
-                StartDatabase(dbContext, passwordEncripter);
-
-                // Obtém o gerador de tokens e já gera um token válido para o usuário criado
-                var tokenGenerator = scope.ServiceProvider.GetRequiredService<IAccessTokenGenerator>();
-                _token = tokenGenerator.Generate(_user);
+                // Chama o método que vai alimentar o banco de dados com os dados iniciais necessários para os testes
+                StartDatabase(dbContext, passwordEncripter, accessTokenGenerator);
             });
     }
 
-    // Métodos auxiliares para que as classes de teste consigam ler os dados gerados aqui
-    public string GetName() => _user.Name;
-    public string GetEmail() => _user.Email;
-    public string GetPassword() => _password;
-    public string GetToken() => _token;
-    public long GetExpenseId() => _expense.Id;
-
     // Método que coordena a alimentação inicial do banco de dados de teste
-    private void StartDatabase(CashFlowDbContext dbContext, IPasswordEncripter passwordEncripter)
+    private void StartDatabase(
+       CashFlowDbContext dbContext,
+       IPasswordEncripter passwordEncripter,
+       IAccessTokenGenerator accessTokenGenerator)
     {
-        AddUsers(dbContext, passwordEncripter); // Adiciona usuário
-        AddExpenses(dbContext, _user);          // Adiciona despesa vinculada ao usuário
+        var user = AddUserTeamMember(dbContext, passwordEncripter, accessTokenGenerator);
+        AddExpenses(dbContext, user);
 
         dbContext.SaveChanges(); // Salva tudo no banco em memória
     }
 
     // Cria um usuário fake, criptografa a senha e salva no banco
-    private void AddUsers(CashFlowDbContext dbContext, IPasswordEncripter passwordEncripter)
+    private User AddUserTeamMember(
+       CashFlowDbContext dbContext,
+       IPasswordEncripter passwordEncripter,
+       IAccessTokenGenerator accessTokenGenerator)
     {
-        _user = UserBuilder.Build(); // Usa um Builder para gerar dados aleatórios/válidos
-        _password = _user.Password;  // Guarda a senha limpa para usar no teste de login depois
-
+        var user = UserBuilder.Build(); // Usa um Builder para gerar dados aleatórios/válidos
+        var password = user.Password;  // Guarda a senha limpa para usar no teste de login depois
         // Substitui a senha limpa pela versão criptografada antes de salvar no banco
-        _user.Password = passwordEncripter.Encrypt(_user.Password);
+        user.Password = passwordEncripter.Encrypt(user.Password);
 
-        dbContext.Users.Add(_user); // Adiciona na tabela de usuários
+        dbContext.Users.Add(user); // Adiciona na tabela de usuários
+
+        var token = accessTokenGenerator.Generate(user);
+
+        User_Team_Member = new UserIdentityManager(user, password, token);
+
+        return user;
     }
 
     // Cria uma despesa fake vinculada ao usuário que acabamos de criar
     private void AddExpenses(CashFlowDbContext dbContext, User user)
     {
-        _expense = ExpenseBuilder.Build(user); // Gera a despesa fake
+        var expense = ExpenseBuilder.Build(user); // Gera a despesa fake
 
-        dbContext.Expenses.Add(_expense); // Adiciona na tabela de despesas
+        dbContext.Expenses.Add(expense); // Adiciona na tabela de despesas
+
+        Expense = new ExpenseIdentityManager(expense);
     }
 }
