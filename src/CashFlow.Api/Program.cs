@@ -15,13 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // Gera o JSON de especificação OpenAPI
-
 builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter))); // adicionando o filtro global de exceções
 
 builder.Services.AddInfrastructure(builder.Configuration); // Adiciona as injeções de dependência da infraestrutura
 builder.Services.AddApplication(); // Adiciona as injeções de dependência da aplicação
 builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>(); // Adiciona a implementação de ITokenProvider que obtém o token do contexto HTTP, necessário para obter o token nas requisições e usar em outras classes, como no LoggedUser
-builder.Services.AddHttpClient(); // Adiciona o HttpClient para ser injetado em outras classes, necessário para o HttpContextTokenValue
+builder.Services.AddHttpContextAccessor(); // Adiciona o serviço de acesso ao contexto HTTP, necessário para o HttpContextTokenValue obter o token das requisições
 
 var signingKey = builder.Configuration.GetValue<string>("Settings:Jwt:SigningKey"); // Obtém a chave de assinatura do JWT do arquivo de configuração, GetValue vem do nuget Microsoft.Extensions.Configuration.Binder
 
