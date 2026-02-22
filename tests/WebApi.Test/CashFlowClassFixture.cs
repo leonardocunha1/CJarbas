@@ -34,6 +34,17 @@ public class CashFlowClassFixture : IClassFixture<CustomWebApplicationFactory>
 
         return await _httpClient.GetAsync(requestUri);
     }
+    protected async Task<HttpResponseMessage> DoDelete(
+       string requestUri,
+       string token,
+       string culture = "en")
+    {
+        AuthorizeRequest(token);
+        ChangeRequestCulture(culture);
+
+        return await _httpClient.DeleteAsync(requestUri);
+    }
+
     private void AuthorizeRequest(string token)
     {
         if (string.IsNullOrWhiteSpace(token))
@@ -43,6 +54,7 @@ public class CashFlowClassFixture : IClassFixture<CustomWebApplicationFactory>
        
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
+
     private void ChangeRequestCulture(string culture)
     {
         _httpClient.DefaultRequestHeaders.AcceptLanguage.Clear();

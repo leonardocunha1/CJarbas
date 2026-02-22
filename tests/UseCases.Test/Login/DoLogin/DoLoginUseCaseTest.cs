@@ -68,9 +68,7 @@ public class DoLoginUseCaseTest
 
     private DoLoginUseCase CreateUseCase(CashFlow.Domain.Entities.User user, string? password = null)
     {
-        var passwordEncripter = new PasswordEncrypterBuilder().
-(password).Build();
-
+        var passwordEncripter = new PasswordEncrypterBuilder().Verify(password).Build();
         var tokenGenerator = JwtTokenGeneratorBuilder.Build();
         var readRepository = new UserReadOnlyRepositoryBuilder().GetUserByEmail(user).Build();
 
