@@ -22,7 +22,7 @@ public class GenerateExpensesReportTest : CashFlowClassFixture
     [Fact]
     public async Task Success_Pdf()
     {
-        var result = await DoGet(requestUri: $"{METHOD}/pdf?month={_expenseDate:Y}", token: _adminToken);
+        var result = await DoGet(requestUri: $"{METHOD}/pdf?month={_expenseDate:yyyy-MM-dd}", token: _adminToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -33,7 +33,7 @@ public class GenerateExpensesReportTest : CashFlowClassFixture
     [Fact]
     public async Task Success_Excel()
     {
-        var result = await DoGet(requestUri: $"{METHOD}/excel?month={_expenseDate:Y}", token: _adminToken);
+        var result = await DoGet(requestUri: $"{METHOD}/excel?month={_expenseDate:yyyy-MM-dd}", token: _adminToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
 
