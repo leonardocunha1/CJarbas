@@ -36,6 +36,7 @@ public class UpdateExpenseUseCase : IUpdateExpenseUseCase
         {
             throw new NotFoundException(ResourceErrorMessages.EXPENSE_NOT_FOUND);
         }
+        expense.Tags.Clear();
         // Qual a diferença do _mapper.Map<Expense>(request) para o _mapper.Map(request, expense)?
         // _mapper.Map<Expense>(request) cria uma nova instância de Expense com os valores do request.
         // _mapper.Map(request, expense) atualiza a instância existente de expense com os valores do request.
